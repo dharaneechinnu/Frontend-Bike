@@ -1,0 +1,111 @@
+/* View.css */
+
+.view-page {
+    position: relative;
+}
+
+.image-container {
+    position: relative;
+    overflow: hidden;
+}
+.text-container p{
+    color: white;
+}
+.image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.text-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+}
+
+.page-title {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.page-description {
+    font-size: 1.2rem;
+}
+
+.bike-details {
+    padding: 20px;
+}
+
+.sort-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.sort-controls label {
+    flex: 1 1 100%;
+}
+
+.sort-controls input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+/* View.css */
+
+.bike-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.bike-list-item {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: calc(33.33% - 20px); /* 33.33% width with 20px gap */
+    text-align: center;
+}
+
+.bike-list-item h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+}
+
+.bike-list-item p {
+    margin: 0;
+    margin-bottom: 5px;
+    font-size: 1rem;
+    color: #666;
+}
+
+.bike-list-item img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Crazy styles */
+.bike-list-item {
+   
+    transition: transform 0.3s ease-in-out;
+}
+
+.bike-list-item:hover {
+   
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
