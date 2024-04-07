@@ -96,7 +96,7 @@ const Register = () => {
       <div className="center-containers">
         <ToastContainer />
         <div className="register-containers">
-          <h2 className='registers_title'>Register</h2>
+          <h2 className='registers_title'>Registration</h2>
           <form onSubmit={handleSign} id='registerForm'>
             <div className="form-groups">
               <label className='Names' htmlFor='name'>Name:</label>

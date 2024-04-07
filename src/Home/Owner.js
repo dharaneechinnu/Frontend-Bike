@@ -96,7 +96,7 @@ const Owner = () => {
    <div className="center-containers">
         <ToastContainer />
         <div className="register-containers">
-          <h2 className='registers_title'>Registion For Only Owner</h2>
+          <h2 className='registers_title'>Registration For Only Owner</h2>
           <form onSubmit={handleSign} id='registerForm'>
             <div className="form-groups">
               <label className='Names' htmlFor='name'>Name:</label>
