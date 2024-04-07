@@ -1,52 +1,93 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Home.css';
+import Nav from '../Navbar/Nav';
+import Api from '../Api/Api';
 
-const Home = ({ bikes, newBike, handleInputChange, handleFileInputChange, addBike }) => {
+const Home = () => {
+    const userid = localStorage.getItem("userId")
+    const [newBike, setNewBike] = useState({
+        userid,
+        brand: '',
+        model: '',
+        price: '',
+        imgs: '',
+        location: '',
+        shopName: '',
+        phonenumber:''
+    });
+
+    const handleInputChange = (event) => {
+        setNewBike({
+            ...newBike,
+            [event.target.name]: event.target.value
+        });
+    };
+
+    const addBike = async () => {
+        try {
+            const response = await Api.post('/api/addBike', { newBike });
+    
+            if (response.status === 200) {
+                alert("Successfully added the bike");
+                console.log('Bike added successfully');
+    
+                // Reset the form fields
+                setNewBike({
+                    userid,
+                    brand: '',
+                    model: '',
+                    price: '',
+                    imgs: '',
+                    location: '',
+                    shopName: '',
+                    phonenumber:''
+                });
+            } else {
+                console.error('Failed to add bike');
+            }
+        } catch (error) {
+            console.error('Error adding bike:', error);
+        }
+    };
+    
     return (
-        <div className="home-container">
-            <h2>Bike Listings</h2>
-            <ul className="bike-list">
-                {bikes.map(bike => (
-                    <li key={bike.id} className="bike-list-item">
-                        <div className='box'>
-                            <h3>{bike.brand} {bike.model}</h3>
-                            <p>Price: RS{bike.price}</p>
-                            <p>Location: {bike.location}</p> {/* Display the location */}
-                            <p>Shop: {bike.shopName}</p> {/* Display the shop name */}
-                            {bike.imgs && <img src={bike.imgs} alt="Bike" />}
-                        </div>
-                    </li>
-                ))}
-            </ul>
-            <h2>Add New Bike</h2>
-            <div className="add-bike-form">
-                <label>
-                    Brand:
-                    <input type="text" name="brand" value={newBike.brand} onChange={handleInputChange} />
-                </label>
-                <label>
-                    Model:
-                    <input type="text" name="model" value={newBike.model} onChange={handleInputChange} />
-                </label>
-                <label>
-                    Price:
-                    <input type="number" name="price" value={newBike.price} onChange={handleInputChange} />
-                </label>
-                <label>
-                    Images:
-                    <input type="file" accept="image/*" name="imgs" onChange={handleFileInputChange} />
-                </label>
-                <label>
-                    Location:
-                    <input type='text' name="details" value={newBike.details} onChange={handleInputChange} />
-                </label>
-                <label>
-                    Shop Name:
-                    <input type='text' name="shopName" value={newBike.shopName} onChange={handleInputChange} />
-                </label>
-                <button onClick={addBike}>Add Bike</button>
+        <>
+            <Nav />
+            <div className="home-container">
+                <h2>Add New Bike</h2>
+                <div className="add-bike-form">
+                    <label>
+                        Brand:
+                        <input type="text" name="brand" value={newBike.brand} onChange={handleInputChange} />
+                    </label>
+                    <label>
+                        Model:
+                        <input type="text" name="model" value={newBike.model} onChange={handleInputChange} />
+                    </label>
+                    <label>
+                        Price:
+                        <input type="number" name="price" value={newBike.price} onChange={handleInputChange} />
+                    </label>
+                    <label>
+                        Images URL:
+                        <input type="text" name="imgs" value={newBike.imgs} onChange={handleInputChange} />
+                    </label>
+                    <label>
+                        Location:
+                        <input type="text" name="location" value={newBike.location} onChange={handleInputChange} />
+                    </label>
+                    <label>
+                        Showroom Name:
+                        <input type="text" name="shopName" value={newBike.shopName} onChange={handleInputChange} />
+                    </label>
+                    <label>
+                        Phone-Number:
+                        <input type="number" name="phonenumber" value={newBike.phonenumber} onChange={handleInputChange} />
+                    </label>
+                    <button onClick={addBike}>Add Bike</button>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

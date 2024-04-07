@@ -1,101 +1,103 @@
 import React, { useState, useEffect } from 'react';
 import './View.css';
 import bikeImage from '../Assests/bike.jpg';
+import Api from '../Api/Api';
+import UserNav from './UserNav';
 
-const View = ({ bikes }) => {
-    const [visibleChars, setVisibleChars] = useState(0);
-    const [sortByBrand, setSortByBrand] = useState('');
-    const [sortByLocation, setSortByLocation] = useState(''); 
-    const [sortByPrice, setSortByPrice] = useState(''); 
-    const [sortByShop, setSortByShop] = useState(''); 
-    const [sortedBikes, setSortedBikes] = useState(bikes);
+const View = () => {
+    const [bikes, setBikes] = useState([]);
+    const [searchBrand, setSearchBrand] = useState('');
+    const [searchModel, setSearchModel] = useState('');
+
     useEffect(() => {
-        const interval = setInterval(() => {
-            setVisibleChars(prevVisibleChars => prevVisibleChars + 1);
-        }, 50);
-
-        return () => clearInterval(interval);
+        fetchBikes();
     }, []);
 
-  
-    const handleSortBy = (e, sortBy) => {
-        const inputValue = e.target.value.toLowerCase(); 
-              switch (sortBy) {
-            case 'brand':
-                setSortByBrand(inputValue);
-                break;
-            case 'location':
-                setSortByLocation(inputValue);
-                break;
-            case 'price':
-                setSortByPrice(inputValue);
-                break;
-            case 'shop':
-                setSortByShop(inputValue);
-                break;
-            default:
-                break;
+    const fetchBikes = async () => {
+        try {
+            const response = await Api.get('/api/bikes');
+            const data = response.data;
+            console.log(data);
+            setBikes(data);
+        } catch (error) {
+            console.error('Error fetching bikes:', error);
         }
     };
 
-    useEffect(() => {
-        let sorted = [...bikes]; 
-        if (sortByPrice !== '') {
-            sorted.sort((a, b) => a.price - b.price); 
+    const handleBrandInputChange = (e) => {
+        setSearchBrand(e.target.value);
+    };
+
+    const handleModelInputChange = (e) => {
+        setSearchModel(e.target.value);
+    };
+
+    const filteredBikes = () => {
+        let filtered = [...bikes];
+        if (searchBrand) {
+            filtered = filtered.filter(bike => 
+                bike.brand.toLowerCase().includes(searchBrand.toLowerCase())
+            );
         }
-        if (sortByBrand !== '') {
-            sorted = sorted.filter(bike => bike.brand.toLowerCase().includes(sortByBrand));
+        if (searchModel) {
+            filtered = filtered.filter(bike => 
+                bike.model.toLowerCase().includes(searchModel.toLowerCase())
+            );
         }
-        if (sortByLocation !== '') {
-            sorted = sorted.filter(bike => bike.location.toLowerCase().includes(sortByLocation));
-        }
-        if (sortByShop !== '') {
-            sorted = sorted.filter(bike => bike.shopName.toLowerCase().includes(sortByShop));
-        }
-        setSortedBikes(sorted); 
-    }, [bikes, sortByBrand, sortByLocation, sortByPrice, sortByShop]);
+        return filtered;
+    };
 
     return (
         <>
+            <UserNav />
             <div className="view-page">
                 <div className="image-container">
                     <img src={bikeImage} alt="" />
                     <div className="text-container">
                         <h1 className="page-title">Quality pre-owned bikes</h1>
-                        <p className="page-description">{visibleChars > 0 ? 'Explore, buy, and sell conveniently online.'.slice(0, visibleChars) : ''}</p>
+                        <p className="page-description">Explore, buy, and sell conveniently online.</p>
                     </div>
                 </div>
             </div>
-            <div className="bike-details">
-                <div className="sort-controls">
-                    <label>
-                        Sort by Brand:
-                        <input type="text" value={sortByBrand} onChange={(e) => handleSortBy(e, 'brand')} />
-                    </label>
-                    <label>
-                        Sort by Location:
-                        <input type="text" value={sortByLocation} onChange={(e) => handleSortBy(e, 'location')} />
-                    </label>
-                    <label>
-                        Sort by Price:
-                        <input type="text" value={sortByPrice} onChange={(e) => handleSortBy(e, 'price')} />
-                    </label>
-                    <label>
-                        Sort by Shop Name:
-                        <input type="text" value={sortByShop} onChange={(e) => handleSortBy(e, 'shop')} />
-                    </label>
+            <div className="search-container">
+                <div className="search-box">
+                   
+                    <input
+                        type="text"
+                        id="searchBrand"
+                        value={searchBrand}
+                        onChange={handleBrandInputChange}
+                        placeholder="Enter brand to search..."
+                    />
                 </div>
-                <ul className="bike-list">
-                    {sortedBikes.map(bike => (
-                        <li key={bike.id} className="bike-list-item">
-                            <h2>{bike.brand} {bike.model}</h2>
-                            <p>RS{bike.price}</p>
-                            <p>Location: {bike.location}</p>
-                            <p>Shop: {bike.shopName}</p>
-                            {bike.imgs && <img src={bike.imgs} alt="Bike" />}
-                        </li>
+                <div className="search-box">
+                   
+                    <input
+                        type="text"
+                        id="searchModel"
+                        value={searchModel}
+                        onChange={handleModelInputChange}
+                        placeholder="Enter model to search..."
+                    />
+                </div>
+            </div>
+            <div className="bike-list">
+               
+                <div className="bikes">
+                    {filteredBikes().map(bike => (
+                        <div key={bike._id} className="bike">
+                            <img src={bike.imgs} alt={bike.brand} />
+                            <div>
+                                <h3>{bike.brand}</h3>
+                                <p>Model: {bike.model}</p>
+                                <p>Price: ₹{bike.price}</p>
+                                <p>Location: {bike.location}</p>
+                                <p>Showroom Name: {bike.shopName}</p>
+                                <p>PhoneNumber: {bike.phonenumber}</p>
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </div>
         </>
     );
